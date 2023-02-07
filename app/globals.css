@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  scroll-padding-top: 20rem;
+}
+
+:root {
+  --secondary-color: #F0F4F4;
+  --primary-color-4: #04080F;
+  --primary-color-53: #507DBC;
+  --primary-color-77: #A1C6EA;
+  --primary-color-83: #BBD1EA;
+}
+
+body {
+  min-height: 100vh;
+  /* font-family: 'Montserrat', sans-serif; */
+  font-weight: 500;
+}
+
