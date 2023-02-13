@@ -11,15 +11,17 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'secondary-color': '#F0F4F4',
-        'primary-color-4': '#04080F',
-        'primary-color-53': '#507DBC',
-        'primary-color-77': '#A1C6EA',
-        'primary-color-83': '#BBD1EA',
+        'primary-grey': '#343540',
+        'primary-grey-28': '#40414F',
+        'primary-grey-71': '#ACACBE',
+        'secondary-black': '#202123',
+        'secondary-white': '#FFFFFF',
+        'secondary-white-97': '#F6F6F6',
+        'accent-color-71': '#FF69B4',
+        'accent-color-77': '#FF8AC5',
         'danger-color': '#FF4343',
       },
       backgroundImage: {
-        'gradient-to-r-90': 'linear-gradient(90deg, bg-primary-color-53 34.48%, #000000 34.48%)',
       },
       transitionTimingFunction: {
         'out-flex': 'cubic-bezier(0.05, 0.6, 0.4, 0.9)',
@@ -29,10 +31,10 @@ module.exports = {
       }, */
     },
   },
-  /* plugins: [
+  plugins: [
     function ({ addVariant }) {
         addVariant('child', '& > *');
         addVariant('child-hover', '& > *:hover');
     }
-  ], */
+  ],
 };

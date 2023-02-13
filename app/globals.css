@@ -11,11 +11,14 @@
 }
 
 :root {
-  --secondary-color: #F0F4F4;
-  --primary-color-4: #04080F;
-  --primary-color-53: #507DBC;
-  --primary-color-77: #A1C6EA;
-  --primary-color-83: #BBD1EA;
+  --primary-grey: '#343540',
+  --primary-grey-28: '#40414F',
+  --primary-grey-71: '#ACACBE',
+  --secondary-white: '#FFFFFF',
+  --secondary-white-97: '#F6F6F6',
+  --Accent-color-71: '#FF69B4',
+  --secondary-white-77: '#FF8AC5',
+  --danger-color: '#FF4343',
 }
 
 body {
@@ -24,3 +27,56 @@ body {
   font-weight: 500;
 }
 
+.viewHeight {
+  min-height: 100vh;  
+  max-height: -webkit-fill-available;
+  overflow-x: hidden;
+}
+
+.SVGB2W {
+  @apply dark:bg-primary-grey;
+}
+
+.SVGW2B {
+  @apply dark:bg-secondary-white;
+}
+
+.activeLink {
+  position: relative;
+  font-weight: 600;
+}
+
+.activeLink::before {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  width: 90%;
+  transform: translateX(-50%);
+  height: 1px;
+  margin-top: 3px;
+
+  @apply bg-accent-color-77 dark:bg-accent-color-71
+}
+
+.linksm {
+  position: relative;
+  left: 2rem;
+}
+
+.linksm::before {
+  content: '';
+  position: absolute;
+  bottom: 50%;
+  left: -3rem;
+  width: 3rem;
+  transform: translateY(-50%);
+  height: 1px;
+  margin-top: 3px;
+
+  @apply bg-secondary-white-97 dark:bg-primary-grey
+}
+
+.activeLinksm {
+  @apply font-semibold dark:bg-primary-grey
+}

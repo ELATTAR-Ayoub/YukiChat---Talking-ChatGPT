@@ -2,9 +2,10 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import axios from "axios";
 import cheerio from "cheerio";
+import {storeBASEURL} from '@/constants'
 const puppeteer = require('puppeteer');
 
-const BASEURL_AMAZON = 'www.amazon.com'
+const BASEURL_AMAZON = storeBASEURL[0].url
 const keyword = 'keyboard'
 console.log(keyword);
 const url = `https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=${keyword}`;
