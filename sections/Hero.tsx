@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import Image from 'next/image';
 
 // components
-import Loader from '@/components/Loader';
+import Loader from '@/components/loader';
 import ProductCard from '@/components/ProductCard';
 import SolidSvg from '@/components/SolidSVG';
 
