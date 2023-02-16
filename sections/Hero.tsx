@@ -75,7 +75,7 @@ const Hero = () => {
 
   const [productsResults, setProductsResults] = useState<scriptData[]>([]);
   const [productsFiltered, setProductsFiltered] = useState<scriptData[]>([]);
-  const [selectedFilter, setSelectedFilter] = useState('Cheap');
+  const [selectedFilter, setSelectedFilter] = useState('All');
   const [inputValue, setInputValue] = useState('');
   const [loading, setLoading] = useState(false);
   const [providers, setProviders] = useState(providersArr);
@@ -204,10 +204,6 @@ const Hero = () => {
     setInputValue('');
   }
 
-  const fillUpInputValue = (v:string) => {
-    setInputValue(v);
-  }
-
   const toggleActive = (index:number) => {
     const updatedProviders = [...providers];
     updatedProviders[index].active = !updatedProviders[index].active;
@@ -245,7 +241,7 @@ const Hero = () => {
           <button
             key={provider.title}
             className={` ${provider.active ? 'text-primary-grey bg-accent-color-77' :  'text-secondary-white bg-primary-grey-28' } 
-            ${styles.flexCenter} h-full p-2 gap-2 rounded shadow-sm
+            ${styles.flexCenter} h-[49px] p-2 gap-2 rounded shadow-sm
             `}
             onClick={() => toggleActive(index)}
           >
@@ -259,7 +255,7 @@ const Hero = () => {
 
     {(productsResults.length == 0) && <div className={` ${styles.flexCenter} flex-wrap w-full gap-6`}>
       {suggestions.map((suggestion, index) => (
-        <div onClick={() => fillUpInputValue(suggestion.desc)} className={`' ${styles.flexCenter} w-full sm:w-[48%] min-h-[135px] p-6 bg-primary-grey-28 dark:bg-secondary-white rounded shadow-md cursor-pointer hover:bg-primary-grey-71 dark:hover:bg-accent-color-77 transition-all duration-300'`} key={suggestion.ID}>
+        <div onClick={() => setInputValue(suggestion.desc)} className={`' ${styles.flexCenter} w-full sm:w-[48%] min-h-[135px] p-6 bg-primary-grey-28 dark:bg-secondary-white rounded shadow-md cursor-pointer hover:bg-primary-grey-71 dark:hover:bg-accent-color-77 transition-all duration-300'`} key={suggestion.ID}>
           <h1 className=' text-xl font-normal'>
             "{suggestion.desc}" &#8594;
           </h1>
