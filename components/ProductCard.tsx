@@ -29,8 +29,10 @@ interface Data {
 
 const ProductCard: React.FC<Data> = ({ scriptData }) => {
 
+
+
   return (
-    <div className={`relative ${styles.flexStart} gap-0 min-h-[224px] bg-primary-grey-28 dark:bg-secondary-white rounded-md shadow-md`}>
+    <a target={'_blank'} href={'https://' + scriptData.productUrl} className={`relative ${styles.flexStart} gap-0 min-h-[224px] bg-primary-grey-28 dark:bg-secondary-white rounded-md shadow-md`}>
 
         {scriptData.productOriginalPrice && <div className={`${styles.flexCenter} absolute left-0 top-2 bg-accent-color-77 text-secondary-white h-11 w-32 p-2 rounded-r text-base lg:text-lg shadow-md z-10 `}> 
             <span className='relative'>Save {calculateDiscountPercentage(scriptData.productOriginalPrice, scriptData.productPrice)}%</span>
@@ -71,7 +73,7 @@ const ProductCard: React.FC<Data> = ({ scriptData }) => {
         </div>
 
         
-    </div>
+    </a>
   );
 };
 
