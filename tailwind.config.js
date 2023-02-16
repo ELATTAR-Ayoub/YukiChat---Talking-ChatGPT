@@ -20,6 +20,7 @@ module.exports = {
         'accent-color-71': '#FF69B4',
         'accent-color-77': '#FF8AC5',
         'danger-color': '#FF4343',
+        'alert-color': '#FFCB44',
       },
       backgroundImage: {
       },

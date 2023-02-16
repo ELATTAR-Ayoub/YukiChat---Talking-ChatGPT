@@ -54,7 +54,7 @@ const Header = () => {
 
   return (
     <section
-      className={` ${styles.flexBetween} fixed top-0 w-full 2xl:max-w-[1440px] px-7 lg:px-0 z-40 bg-primary-grey-28 dark:bg-secondary-white transition-all duration-300 overflow-hidden ${
+      className={` ${styles.flexBetween} fixed top-0 w-full 2xl:max-w-[1440px] px-3 sm:px-7 z-20 bg-primary-grey dark:bg-secondary-white-97 transition-all duration-300 overflow-hidden ${
         isScrollingUp ? " h-0" : "h-[10vh]"
       }`}
     >

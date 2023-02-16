@@ -16,8 +16,8 @@
   --primary-grey-71: '#ACACBE',
   --secondary-white: '#FFFFFF',
   --secondary-white-97: '#F6F6F6',
-  --Accent-color-71: '#FF69B4',
-  --secondary-white-77: '#FF8AC5',
+  --accent-color-71: '#FF69B4',
+  --accent-color-77: '#FF8AC5',
   --danger-color: '#FF4343',
 }
 
@@ -34,11 +34,11 @@ body {
 }
 
 .SVGB2W {
-  @apply dark:bg-primary-grey;
+  @apply bg-secondary-white dark:bg-primary-grey;
 }
 
 .SVGW2B {
-  @apply dark:bg-secondary-white;
+  @apply bg-primary-grey dark:bg-secondary-white;
 }
 
 .activeLink {
@@ -79,4 +79,74 @@ body {
 
 .activeLinksm {
   @apply font-semibold dark:bg-primary-grey
+}
+
+.elleipsAfterTherdLine {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.load{
+    display: flex;
+    justify-content: center;
+}
+
+.load div{
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin: 0 5px;
+    animation-name: up-and-down;
+    animation-duration: 0.8s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    @apply bg-primary-grey
+}
+
+.load div:nth-child(2){
+    animation-delay: 0.3s;
+}
+
+.load div:nth-child(3){
+    animation-delay: 0.6s;
+}
+
+@keyframes up-and-down {
+  
+    to{
+        opacity: 0.2;
+        transform: translateY(-20px);
+        
+    }
+}
+
+/* inputs */
+
+.primary_label_form {
+  @apply w-full font-semibold text-base text-secondary-white dark:text-primary-grey relative ;
+}
+
+.primary_label_form span {
+ @apply relative top-[38px] left-4 transition-all duration-300 pointer-events-none 
+}
+
+.primary_label_form .wide_span {
+ @apply relative top-[2.5px] left-1 transition-all duration-300 pointer-events-none w-full pr-8 ;
+}
+
+.primary_label_form:has(input:focus) span, .primary_label_form:has(input:valid) span {
+  top: -3px;
+  left: 0;
+  @apply text-accent-color-71 pr-0;
+}
+
+.search_input {
+  @apply dark:bg-secondary-white bg-primary-grey-28 transition-all rounded-md overflow-hidden w-full p-3 border-secondary-black border-[1px] ;
+}
+
+.search_input:focus {
+  outline: 1px solid var(--accent-color-71);
 }

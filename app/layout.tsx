@@ -17,12 +17,12 @@ export default function RootLayout({children, ...rest}: { children: React.ReactN
   return (
     <html lang="en">
       <head />
-      <body className={`flex justify-center items-center flex-col relative w-full h-full bg-primary-grey-28 dark:bg-secondary-white viewHeight`}>
+      <body className={`flex justify-center items-center flex-col relative w-full h-full bg-primary-grey dark:bg-secondary-white-97 viewHeight`}>
           <ThemeProvider attribute='class'>
             <Provider store={store_0001}>
               <Header/>
               <NavMenu/>
-              <div className={` 2xl:max-w-[1440px] w-full mt-[10vh] text-secondary-white dark:text-primary-grey px-7 lg:px-0`}>
+              <div className={` 2xl:max-w-[1440px] w-full mt-[10vh] text-secondary-white dark:text-primary-grey px-3 sm:px-7 `}>
                 {children}
               </div>
               <Footer/>

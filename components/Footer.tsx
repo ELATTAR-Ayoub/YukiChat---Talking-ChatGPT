@@ -23,7 +23,7 @@ const Header = () => {
   const router = useRouter();
 
   return (
-    <section className={` ${styles.flexCenter} flex-col w-full bg-secondary-black text-secondary-white-97 py-16 px-7`}>
+    <section className={` ${styles.flexCenter} flex-col w-full bg-secondary-black text-secondary-white-97 py-16 px-3 sm:px-7`}>
         <motion.div
         variants={staggerContainer}
         initial="hidden"

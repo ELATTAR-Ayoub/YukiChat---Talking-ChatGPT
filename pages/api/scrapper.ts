@@ -6,9 +6,8 @@ import {storeBASEURL} from '@/constants'
 const puppeteer = require('puppeteer');
 
 const BASEURL_AMAZON = storeBASEURL[0].url
-const keyword = 'keyboard'
-console.log(keyword);
-const url = `https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=${keyword}`;
+// const keyword = 'keyboard'
+// const url = `https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=${keyword}`;
 
 interface scriptData {
     productTitle: string;
@@ -20,6 +19,7 @@ interface scriptData {
     productReviews: string | undefined;
     productSeller: string | undefined;
     productProvider: string;
+    productCoupon: string | undefined;
 }
 
 const scrapeData = async (url:string) => {
@@ -51,6 +51,8 @@ const scrapeData = async (url:string) => {
         }
 
         let productProvider = 'Amazon';
+
+        let productCoupon = undefined;
         
         data.push({
           productTitle,
@@ -61,7 +63,8 @@ const scrapeData = async (url:string) => {
           productRating,
           productReviews,
           productSeller,
-          productProvider
+          productProvider,
+          productCoupon
         });
       });
       browser.close();
@@ -71,21 +74,22 @@ const scrapeData = async (url:string) => {
     }
   };
   
-  scrapeData(url).then(data => {
+  /* scrapeData(url).then(data => {
     console.log('data ----');
     console.log(data);
-  });
+  }); */
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
         console.log('you sent =>' + req.body.string);
-        const data = await scrapeData(req.body.string as string);
+        const url = `https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=${req.body.string}`;
+        const data = await scrapeData(url as string);
         
         const responseData = { object: data };
         res.status(200).json(responseData);
     } catch (error) {
         const errorAsError = error as Error;
-        const responseData = {message: errorAsError.message};
+        const responseData = { message: errorAsError.message};
         res.status(404).json(responseData);
     }
 }

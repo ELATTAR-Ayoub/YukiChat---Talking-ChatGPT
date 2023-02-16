@@ -9,6 +9,25 @@ export const storeBASEURL = [
   },
 ];
 
+export const suggestions = [
+  {
+    ID: 0,
+    desc: "What are the best gift options for a 10-year-old's birthday?"
+  },
+  {
+    ID: 1,
+    desc: "What are some affordable home decor options for my living room?"
+  },
+  {
+    ID: 2,
+    desc: "What are the best gadgets for a tech-savvy person?"
+  },
+  {
+    ID: 3,
+    desc: "Can you suggest some healthy meal options for a busy week?"
+  },
+];
+
 export const socials = [
   {
     name: 'twitter',
