@@ -231,7 +231,7 @@ const Hero = () => {
   }
 
   function generateOptions(data:string) {
-    const options = data.split(/(\d+\.\s)/).filter(Boolean);
+    const options = data.split(/\n/).filter(Boolean);
   
     return options.map((option, index) => {
       const [title, ...description] = option.split(':');
