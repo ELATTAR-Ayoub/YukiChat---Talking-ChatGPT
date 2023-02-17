@@ -38,14 +38,14 @@ const ProductCard: React.FC<Data> = ({ scriptData }) => {
             <span className='relative'>Save {calculateDiscountPercentage(scriptData.productOriginalPrice, scriptData.productPrice)}%</span>
         </div>}
 
-        <div className={` ${styles.flexCenter} w-2/5 h-full bg-secondary-white`}>
+        <div className={` ${styles.flexCenter} w-2/5 lg:w-1/5 h-full bg-secondary-white`}>
             <div className={` w-full  `}>
                 <img className={`w-full h-full object-cover `} src={scriptData.productThumbnail} alt="Product-image-0" />
             </div>
         </div>
         
 
-        <div className={`relative ${styles.flexStart} flex-col gap-3 p-4 w-3/5`}>
+        <div className={`relative ${styles.flexStart} flex-col gap-3 p-4 w-3/5 h-full `}>
             <h2 className='elleipsAfterTherdLine text-base w-full' title={scriptData.productTitle}> {scriptData.productTitle} </h2>
             
             <div className={` ${styles.flexBetweenEnd} text-alert-color`}>

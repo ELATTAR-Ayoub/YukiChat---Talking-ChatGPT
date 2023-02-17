@@ -60,10 +60,10 @@ export const Footer_links = [
   {
     title: 'Quick links',
     links: [
-      {
+      /* {
         label: "About",
         path: "/about",
-      },
+      }, */
     ]
   },
   {

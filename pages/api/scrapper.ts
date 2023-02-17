@@ -83,7 +83,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
         console.log('you sent =>' + req.body.string);
         const url = `https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=${req.body.string}`;
-        const data = await scrapeData(url as string);
+        const data = await scrapeData(url);
+
+        /* const url = `https://www.aliexpress.com/`;
+        const newData  = await scrapeData(url);
+        const data  = [...data, newData] */
         
         const responseData = { object: data };
         res.status(200).json(responseData);
