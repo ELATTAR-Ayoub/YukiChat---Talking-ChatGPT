@@ -221,8 +221,8 @@ const Hero = () => {
         temperature: 0,
         max_tokens: 128,
       });
-      setOpanAiReply(response.data.choices[0].text);
-      console.log(response);
+      if (response.data.choices[0].text) {setOpanAiReply(response.data.choices[0].text);}
+      // console.log(response);
       setLoading(false);
     } catch (error) {
       console.log(error);
