@@ -19,7 +19,8 @@ const headers = {
 }
 
 export default async function handler( req: NextApiRequest, res: NextApiResponse<Data | Error> ) {
-  let days = 4, city = 'Rio'
+  let days = 4, city = 'Marrakech'
+  
   if (req.body) {
     let body = JSON.parse(req.body)
     days = body.days

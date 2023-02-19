@@ -99,19 +99,19 @@ const Hero = () => {
           }))} className='search_input'  />
           </label>
           
-          <button aria-label="Search bar button" type="button" onClick={hitAPI} className={`w-full rounded p-4 bg-accent-color-77 hover:bg-accent-color-71 transition-all ${styles.flexCenter}`} >
+          <button aria-label="Search bar button" type="button" onClick={hitAPI} className={`w-full rounded p-4 bg-accent-color-77 hover:bg-accent-color-71 text-secondary-white transition-all ${styles.flexCenter}`} >
               Get travel journey<SolidSvg width={'24px'} height={'24px'} className={'SVGB2W scale-110'} color={'#fff'} path={'/send.svg'} />
           </button>
     </form>
 
+    <div className={`${styles.flexStart} flex-col gap-8 relative w-full my-4`} >
         {
           loading && (
             <p>{message}</p>
           )
         }
         {
-          <div className={`${styles.flexStart} flex-col gap-8 relative w-full my-4`} >
-          {itinerary && days.map((day, index) => (
+          itinerary && days.map((day, index) => (
             <div
               key={index}
             >
@@ -126,9 +126,10 @@ const Hero = () => {
                 {`Day ${day}`}
                 </ReactMarkdown>
             </div>
-          ))}
-          </div>
+          ))
         }
+    </div>
+
     
   </section>
   )
