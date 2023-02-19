@@ -1,18 +1,11 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation'
 
 // styles
 import styles from '../styles/index';
-import stylescss from '../styles/page.module.css';
 
 // components
-import LightModeBtn from './LightModeBtn.jsx';
 import Logo from './Logo';
-import SolidSvg from './SolidSVG';
-
-// constants
-import {Footer_links} from '../constants/index'
 
 // motion
 import { motion } from 'framer-motion';
