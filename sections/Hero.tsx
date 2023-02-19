@@ -7,6 +7,7 @@ import ReactMarkdown from 'react-markdown'
 // components
 import Loader from '@/components/loader';
 import SolidSvg from '@/components/SolidSVG';
+import ToastMessage from '@/components/Toast';
 
 // styles
 import styles from '@/styles/index';
@@ -19,9 +20,12 @@ const Hero = () => {
   const [request, setRequest] = useState<{days?: string, city?: string}>({})
   let [itinerary, setItinerary] = useState<string>('')
   const [loading, setLoading] = useState(false)
+  const [toast, setToast] = useState<{show: boolean, msg: string, type: string}>({show:false, msg:'', type:'error' })
   const [message, setMessage] = useState('')
+  
 
   async function hitAPI() {
+    setToast({ show: false, msg: '', type: 'success' });
     try {
       if (!request.city || !request.days) return
       setLoading(true)
@@ -37,22 +41,25 @@ const Hero = () => {
         if (!loading) return
         setMessage('Almost there ...')
       }, 15000)
+      
 
       const response = await fetch('/api/get-itinerary', {
         method: 'POST',
         body: JSON.stringify({
           days: request.days,
           city: request.city
-        })
-      })
+        }),
+        timeout: 20000
+      } as any)
       const json = await response.json()
       
       const response2 = await fetch('/api/get-points-of-interest', {
         method: 'POST',
         body: JSON.stringify({
           pointsOfInterestPrompt: json.pointsOfInterestPrompt,
-        })
-      })
+        }),
+        timeout: 20000
+      } as any)
       const json2 = await response2.json()
 
       let pointsOfInterest = JSON.parse(json2.pointsOfInterest)
@@ -65,8 +72,10 @@ const Hero = () => {
 
       setItinerary(itinerary)
       setLoading(false)
+      setToast({ show: true, msg: 'updated successfully!', type: 'success' });
     } catch (err) {
       console.log('error: ', err)
+      setToast({ show: true, msg: 'An error occurred', type: 'error' });
       setMessage('')
     }
   }
@@ -83,9 +92,7 @@ const Hero = () => {
   return (
   <section className={`${styles.flexCenter} flex-col gap-8 relative overflow-hidden w-full my-4`} >
 
-    {/* {(loading) &&
-      <Loader/>
-    } */}
+    {toast.show && <ToastMessage message={toast.msg} type={'success'} />}
 
     <form onSubmit={hitAPI} className={` relative ${styles.flexBetween} gap-6 flex-col w-full `}>
           <label aria-label='City' className={` primary_label_form `}>

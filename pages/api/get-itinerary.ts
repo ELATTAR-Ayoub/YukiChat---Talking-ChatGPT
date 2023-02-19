@@ -18,7 +18,7 @@ const headers = {
   'Authorization': `Bearer ${OPENAI_API_KEY}`
 }
 
-export default async function handler( req: NextApiRequest, res: NextApiResponse<Data | Error> ) {
+export default async function handler( req: NextApiRequest, res: NextApiResponse<Data | string> ) {
   let days = 4, city = 'Marrakech'
   
   if (req.body) {
@@ -63,7 +63,8 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
       itinerary: itinerary.choices[0].text
     })
 
-  } catch (err) {
-    console.log('error: ', err)
+  } catch (error) {
+    const errorAsError = error as Error;
+    res.status(404).json(errorAsError.message);
   }
 }
