@@ -6,30 +6,19 @@ const Loader = () => {
 
   return (
     <div className={`flex justify-end items-end gap-2 cursor-pointer`}>
-        <svg width="32" height="32"  viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <g clip-path="url(#clip0_2_198)">
-          <rect width="26" height="26" fill="#FF8AC5"/>
-          <mask id="mask0_2_198" maskUnits="userSpaceOnUse" x="0" y="0" width="26" height="26">
-          <path d="M0 0L26 0V26H0L0 0Z" fill="#D9D9D9"/>
-          </mask>
-          <g mask="url(#mask0_2_198)">
-          <path d="M6.15841 36.6916C5.23094 28.8972 5.28932 24.6844 5.98914 16.5403L17.311 37.0567L6.15841 36.6916Z" fill="#343540"/>
-          <path d="M5.98188 16.5506C6.08545 16.0634 19.6709 5.31628 20.3113 5.32209C20.9517 5.3279 40.125 13.4527 41.2585 16.9303C42.392 20.4079 17.7333 39.3243 14.7993 37.6637C11.8654 36.0031 5.87831 17.0379 5.98188 16.5506Z" fill="white"/>
-          <path d="M10.6941 15.1927C9.52098 5.01578 9.52098 5.01578 19.4818 8.16713" stroke="#343540" stroke-linecap="round"/>
-          <rect x="13.6141" y="21.2482" width="2" height="2" rx="1" transform="rotate(-41.3029 13.6141 21.2482)" fill="#343540"/>
-          <rect x="18.2185" y="17.2027" width="2" height="2" rx="1" transform="rotate(-41.3029 18.2185 17.2027)" fill="#343540"/>
-          <rect x="22.8229" y="13.1572" width="2" height="2" rx="1" transform="rotate(-41.3029 22.8229 13.1572)" fill="#343540"/>
-          </g>
-          </g>
-          <defs>
-          <clipPath id="clip0_2_198">
-          <rect width="26" height="26" fill="white"/>
-          </clipPath>
-          </defs>
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="13" cy="13" r="13" fill="#696FFF"/>
+          <line x1="14.0834" y1="14.7511" x2="7.54453" y2="21.2899" stroke="white" stroke-width="0.7" stroke-linecap="round"/>
+          <path d="M13.6057 13.9727C13.7439 13.8376 13.7465 13.616 13.6115 13.4777C13.4764 13.3394 13.2548 13.3368 13.1165 13.4719L13.6057 13.9727ZM4.23824 22.1448L3.98787 22.3893L4.47702 22.8901L4.72739 22.6455L4.23824 22.1448ZM13.1165 13.4719L4.23824 22.1448L4.72739 22.6455L13.6057 13.9727L13.1165 13.4719Z" fill="white"/>
+          <line x1="12.3248" y1="12.7727" x2="5.56618" y2="19.5313" stroke="white" stroke-width="0.7" stroke-linecap="round"/>
+          <path d="M22.537 4.82215C22.8832 5.16837 22.8832 5.72584 22.537 6.06618L20.2543 8.34886L21.4984 13.7416L20.671 14.5749L18.3942 10.2149L16.1056 12.5034L16.3169 13.9528L15.689 14.5749L14.6562 12.7088L12.7843 11.6702L13.4063 11.0364L14.8733 11.2535L17.1443 8.98261L12.7843 6.6882L13.6176 5.8608L19.0103 7.10483L21.293 4.82215C21.6216 4.48181 22.2084 4.48181 22.537 4.82215Z" fill="white"/>
         </svg>
 
+
+
+
         <div className='relative font-bold text-sm text-accent-color-71 top-1'>
-          Convobuy
+          GPT-Travel
         </div>
     </div>
   );

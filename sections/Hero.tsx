@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image';
+import ReactMarkdown from 'react-markdown'
 
 // components
 import Loader from '@/components/loader';
-import ProductCard from '@/components/ProductCard';
 import SolidSvg from '@/components/SolidSVG';
 
 // styles
@@ -14,308 +14,121 @@ import styles from '@/styles/index';
 // constants
 import {suggestions} from '@/constants'
 
-// opanAI
-import { Configuration, OpenAIApi } from "openai";
-const configuration = new Configuration({
-  apiKey: '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',
-});
-const openai = new OpenAIApi(configuration);
-
-interface scriptData {
-  productTitle: string;
-  productThumbnail: string | undefined;
-  productUrl: string;
-  productPrice: string;
-  productOriginalPrice: string;
-  productRating: string;
-  productReviews: string | undefined;
-  productSeller: string | undefined;
-  productProvider: string;
-  productCoupon: string;
-}
-
 const Hero = () => {
 
-  const providersArr = [
-    {
-      "title": "Amazon",
-      "icon": "/amazon.svg",
-      "active": true
-    },
-    {
-      "title": "Aliexpress",
-      "icon": "/Aliexpress.svg",
-      "active": false
-    },
-  ];
+  const [request, setRequest] = useState<{days?: string, city?: string}>({})
+  let [itinerary, setItinerary] = useState<string>('')
+  const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState('')
 
-  const filterOptions = [
-    {
-      value: 'All',
-      label: 'All',
-    },
-    {
-      value: 'Cheap',
-      label: 'Most Cheap',
-    },
-    {
-      value: 'Expensive',
-      label: 'Most Expensive',
-    },
-    {
-      value: 'Rated',
-      label: 'Most Rated',
-    },
-    {
-      value: 'Reviewed',
-      label: 'Most Reviewed',
-    },
-    {
-      value: 'Discount',
-      label: 'Huge Discount',
-    },
-    {
-      value: 'Coupons',
-      label: 'Huge Coupons',
-    }
-  ];
-
-  const [productsResults, setProductsResults] = useState<scriptData[]>([]);
-  const [productsFiltered, setProductsFiltered] = useState<scriptData[]>([]);
-  const [selectedFilter, setSelectedFilter] = useState('All');
-  const [inputValue, setInputValue] = useState('');
-  const [opanAiReply, setOpanAiReply] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [providers, setProviders] = useState(providersArr);
-
-  function filterProducts(event: React.ChangeEvent<HTMLSelectElement>) {
-    const filterOption = event.target.value;
-    setSelectedFilter(filterOption);
-
-    switch(filterOption) {
-      case 'All':
-        setProductsFiltered([...productsResults]);
-        break;
-      case 'Cheap':
-        
-        setProductsFiltered([...productsFiltered].sort((a, b) => {
-          if (!a.productPrice) {
-            return 1;
-          }
-          if (!b.productPrice) {
-            return -1;
-          }
-          const reviewsA = parseInt((a.productPrice).replace(/[$,]/g, ''));
-          const reviewsB = parseInt((b.productPrice).replace(/[$,]/g, ''));
-          
-          return reviewsA - reviewsB;
-        }));
-        break;
-      case 'Expensive':
-        
-        setProductsFiltered([...productsFiltered].sort((a, b) => {
-          if (!a.productPrice) {
-            return 1;
-          }
-          if (!b.productPrice) {
-            return -1;
-          }
-          const reviewsA = parseInt((a.productPrice).replace(/[$,]/g, ''));
-          const reviewsB = parseInt((b.productPrice).replace(/[$,]/g, ''));
-          return reviewsB - reviewsA;
-        }));
-        break;
-      case 'Rated':
-        setProductsFiltered([...productsFiltered].sort((a, b) => {
-          if (!a.productRating) {
-            return 1;
-          }
-          if (!b.productRating) {
-            return -1;
-          }
-          return parseInt(b.productRating) - parseInt(a.productRating);
-        }));
-        break;
-      case 'Reviewed':
-        setProductsFiltered([...productsFiltered].sort((a, b) => {
-          const reviewsA = parseInt((a.productReviews || '0').replace(/,/g, ''));
-          const reviewsB = parseInt((b.productReviews || '0').replace(/,/g, ''));
-          return reviewsB - reviewsA;
-        }));
-        break;
-      case 'Discount':
-        setProductsFiltered([...productsFiltered].sort((a, b) => {
-          if (!a.productOriginalPrice) {
-            return 1;
-          }
-          if (!b.productOriginalPrice) {
-            return -1;
-          }
-          const discountA = calculateDiscountPercentage(a.productOriginalPrice, a.productPrice);
-          const discountB = calculateDiscountPercentage(b.productOriginalPrice, b.productPrice);
-          return discountB - discountA;
-        }));
-        break;
-      case 'Coupons':
-        setProductsFiltered([...productsFiltered].sort((a, b) => {
-          if (!a.productCoupon) {
-            return 1;
-          }
-          if (!b.productCoupon) {
-            return -1;
-          }
-          return parseInt(b.productCoupon || '0') - parseInt(a.productCoupon || '0');
-        }));
-        break;
-      default:
-        setProductsFiltered(productsFiltered);
-    }
-  }
-
-  function calculateDiscountPercentage(productOriginalPrice: string, productPrice: string) {
-    const originalPrice = parseFloat(productOriginalPrice.replace(/[^\d.-]/g, ''));
-    const price = parseFloat(productPrice.replace(/[^\d.-]/g, ''));
-    const discountPercentage = ((originalPrice - price) / originalPrice) * 100;
-    return Math.round(discountPercentage);
-  }
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
-  }
-
-  const searchProducts = (data:string) => {
-    setLoading(true);
-    // 
-    fetch("/api/scrapper", {
-        method: "POST",
-        body: JSON.stringify({string: data}),
-        headers: {
-            "Content-Type": "application/json"
-        }
-    }).then(res => res.json())
-    .then((data:any) => {
-        console.log('data =>>>>>');
-        console.log(data);
-        setProductsResults(data.object);
-        setProductsFiltered(data.object);
-        console.log('productsResults');
-        console.log(productsResults);
-
-        setLoading(false);
-    })
-    .catch(error => {
-        console.log(error);
-        setLoading(false);
-    });
-    // 
-    setInputValue('');
-  }
-
-  const OpenAIReply = async (event: React.MouseEvent<HTMLButtonElement>  | React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setLoading(true);
+  async function hitAPI() {
     try {
-      const response = await openai.createCompletion({
-        model: "text-davinci-003",
-        prompt: inputValue,
-        temperature: 0,
-        max_tokens: 128,
-      });
-      if (response.data.choices[0].text) {setOpanAiReply(response.data.choices[0].text);}
-      // console.log(response);
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
+      if (!request.city || !request.days) return
+      setLoading(true)
+      setMessage('Building itinerary...')
+      setItinerary('')
+
+      setTimeout(() => {
+        if (!loading) return
+        setMessage('Getting closer ...')
+      }, 7000)
+
+      setTimeout(() => {
+        if (!loading) return
+        setMessage('Almost there ...')
+      }, 15000)
+
+      const response = await fetch('/api/get-itinerary', {
+        method: 'POST',
+        body: JSON.stringify({
+          days: request.days,
+          city: request.city
+        })
+      })
+      const json = await response.json()
+      
+      const response2 = await fetch('/api/get-points-of-interest', {
+        method: 'POST',
+        body: JSON.stringify({
+          pointsOfInterestPrompt: json.pointsOfInterestPrompt,
+        })
+      })
+      const json2 = await response2.json()
+
+      let pointsOfInterest = JSON.parse(json2.pointsOfInterest)
+      let itinerary = json.itinerary
+
+      pointsOfInterest.map((point:string) => {
+        // itinerary = itinerary.replace(point, `<a target="_blank" rel="no-opener" href="https://www.google.com/search?q=${encodeURIComponent(point + ' ' + request.city)}">${point}</a>`)
+        itinerary = itinerary.replace(point, `[${point}](https://www.google.com/search?q=${encodeURIComponent(point + ' ' + request.city)})`)
+      })
+
+      setItinerary(itinerary)
+      setLoading(false)
+    } catch (err) {
+      console.log('error: ', err)
+      setMessage('')
     }
   }
 
-  function generateOptions(data:string) {
-    const options = data.split(/\n/).filter(Boolean);
-  
-    return options.map((option, index) => {
-      const [title, ...description] = option.split(':');
-      const displayTitle = title.trim();
-      const displayDescription = description.join(':').trim();
-      
-      return (
-        <li key={title} className={` mb-2`} onClick={() => searchProducts(displayTitle)}>
-          <span className=' cursor-pointer hover:bg-accent-color-77'>{displayTitle}</span>
-          {displayDescription && `: ${displayDescription}`}
-        </li>
-      );
-    });
+  let days = itinerary.split('Day')
+
+  if (days.length > 1) {
+    days.shift()
+  } else {
+    days[0] = "1" + days[0]
   }
 
-  const toggleActive = (index:number) => {
-    const updatedProviders = [...providers];
-    updatedProviders[index].active = !updatedProviders[index].active;
-    setProviders(updatedProviders);
-  };
 
   return (
   <section className={`${styles.flexCenter} flex-col gap-8 relative overflow-hidden w-full my-4`} >
 
-    {(loading) &&
+    {/* {(loading) &&
       <Loader/>
-    }
+    } */}
 
-    <form onSubmit={OpenAIReply} className={` relative ${styles.flexBetween} flex-col w-full `}>
-          <label aria-label='Search bar' className={` primary_label_form `}>
-              <input required type="text" placeholder='What do you think about buying?' value={inputValue} onChange={handleChange} className='search_input'  />
+    <form onSubmit={hitAPI} className={` relative ${styles.flexBetween} gap-6 flex-col w-full `}>
+          <label aria-label='City' className={` primary_label_form `}>
+              <input required type="text" placeholder='City' onChange={e => setRequest(request => ({
+            ...request, city: e.target.value
+          }))} className='search_input'  />
+          </label>
+          <label aria-label='Days' className={` primary_label_form `}>
+              <input required type="number" max={10} min={0} placeholder='Days' onChange={e => setRequest(request => ({
+            ...request, days: e.target.value
+          }))} className='search_input'  />
           </label>
           
-          <button aria-label="Search bar button" type="button" onClick={OpenAIReply} className={`absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-primary-grey-28 dark:bg-secondary-white transition-all ${styles.flexCenter} overflow-hidden w-10 h-10`} >
-              <SolidSvg width={'24px'} height={'24px'} className={'SVGB2W scale-110'} color={'#ACACBE'} path={'/send.svg'} />
+          <button aria-label="Search bar button" type="button" onClick={hitAPI} className={`w-full rounded p-4 bg-accent-color-77 hover:bg-accent-color-71 transition-all ${styles.flexCenter}`} >
+              Get travel journey<SolidSvg width={'24px'} height={'24px'} className={'SVGB2W scale-110'} color={'#fff'} path={'/send.svg'} />
           </button>
     </form>
 
-    <div className={` relative ${styles.flexBetween} w-full`}>
-      {/* <p>{opanAiReply}</p> */}
-      <ol>{generateOptions(opanAiReply)}</ol>
-    </div>
-
-    {(productsResults.length == 0) && <div className={` ${styles.flexCenter} flex-wrap w-full gap-6`}>
-      {suggestions.map((suggestion, index) => (
-        <div onClick={() => setInputValue(suggestion.desc)} className={`' ${styles.flexCenter} w-full sm:w-[48%] min-h-[135px] p-6 bg-primary-grey-28 dark:bg-secondary-white rounded shadow-md cursor-pointer hover:bg-primary-grey-71 dark:hover:bg-accent-color-77 transition-all duration-300'`} key={suggestion.ID}>
-          <h1 className=' text-base lg:text-xl font-normal'>
-            "{suggestion.desc}" &#8594;
-          </h1>
-        </div>
-      ))}
-    </div>}
-
-    {(productsFiltered.length > 0) && <div className={` grid grid-cols-[1fr] w-full gap-6`}>
-      <div className={` ${styles.flexStart} flex-col lg:flex-row w-full gap-6`}>
-        <select title="Filter" value={selectedFilter} onChange={filterProducts} className=' cursor-pointer bg-primary-grey-28 dark:bg-secondary-white transition-all rounded-md overflow-hidden p-3 border-secondary-black w-64 border-primary-grey border-[1px]'>
-          {filterOptions.map((option, index) => (
-              <option key={index} value={option.value} className={` my-4 `}>
-                {option.label}
-              </option>
-            ))}
-        </select>
-          
-        <div className={` ${styles.flexStart} flex-wrap w-full h-full gap-4`}>
-          {providers.map((provider, index) => (
-            <button
-              key={provider.title}
-              className={` ${provider.active ? 'text-primary-grey bg-accent-color-77' :  'text-secondary-white bg-primary-grey-28' } 
-              ${styles.flexCenter} h-[49px] p-2 gap-2 rounded shadow-sm
-              `}
-              onClick={() => toggleActive(index)}
+        {
+          loading && (
+            <p>{message}</p>
+          )
+        }
+        {
+          <div className={`${styles.flexStart} flex-col gap-8 relative w-full my-4`} >
+          {itinerary && days.map((day, index) => (
+            <div
+              key={index}
             >
-              <SolidSvg width={'24px'} height={'24px'} className={''} color={` ${provider.active ? '#343540' :  '#F6F6F6' }`} path={provider.icon} />
-              {provider.title}
-            </button>
+              <ReactMarkdown
+              // remarkPlugins={[remarkGfm]}
+              components={{
+                a: (props:any) => {
+                    return <a target="_blank" className='linkHover' rel="no-opener" href={props.href}>{props.children}</a>
+                }
+            }}
+              >
+                {`Day ${day}`}
+                </ReactMarkdown>
+            </div>
           ))}
-        </div>
-        
-      </div>
-      {productsFiltered.map((scriptData, index) => (
-        <ProductCard key={index} scriptData={scriptData} />
-      ))}
-    </div>}
-
+          </div>
+        }
     
   </section>
   )

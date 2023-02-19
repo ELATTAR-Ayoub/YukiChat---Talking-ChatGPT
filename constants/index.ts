@@ -1,30 +1,20 @@
-export const storeBASEURL = [
-  {
-    name: 'amazon',
-    url: 'www.amazon.com'
-  },
-  {
-    name: 'aliexpress',
-    url: 'www.aliexpress.com'
-  },
-];
 
 export const suggestions = [
   {
     ID: 0,
-    desc: "What are the best gift options for a 10-year-old's birthday?"
+    desc: "Marrakech - Morocco?"
   },
   {
     ID: 1,
-    desc: "What are some affordable home decor options for my living room?"
+    desc: "Tokyo - Japan"
   },
   {
     ID: 2,
-    desc: "What are the best gadgets for a tech-savvy person?"
+    desc: "Sydney - Australia"
   },
   {
     ID: 3,
-    desc: "Can you suggest some healthy meal options for a busy week?"
+    desc: "Bangkok - Thailand"
   },
 ];
 
@@ -48,43 +38,5 @@ export const socials = [
 ];
 
 export const Footer_links = [
-  {
-    title: 'Explore',
-    links: [
-      {
-        label: "Home",
-        path: "/",
-      },
-    ]
-  },
-  {
-    title: 'Quick links',
-    links: [
-      /* {
-        label: "About",
-        path: "/about",
-      }, */
-    ]
-  },
-  {
-    title: 'Support Developer',
-    links: [
-      {
-        label: "By me a coffee",
-        path: "https://www.buymeacoffee.com/elattar",
-      },
-      {
-        label: "Github",
-        path: "https://github.com/ELATTAR-Ayoub",
-      },
-      {
-        label: "Twitter",
-        path: "https://twitter.com/EA_Krowl",
-      },
-      {
-        label: "LinkedIn",
-        path: "https://www.linkedin.com/in/elattar-ayoub-22469320b/",
-      },
-    ]
-  },
+  
 ]
