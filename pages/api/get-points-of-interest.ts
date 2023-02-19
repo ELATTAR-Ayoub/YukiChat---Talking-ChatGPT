@@ -26,8 +26,9 @@ export default async function handler(
       prompt: pointsOfInterestPrompt,
       temperature: 0,
       max_tokens: 300
-    })
-  })
+    }),
+    timeout: 15000
+  } as any)
 
   let pointsOfInterest = await response2.json()
 

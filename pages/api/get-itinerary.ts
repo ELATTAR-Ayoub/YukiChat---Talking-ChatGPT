@@ -46,9 +46,10 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
         model: 'text-davinci-003',
         prompt: basePrompt,
         temperature: 0,
-        max_tokens: 550
-      })
-    })
+        max_tokens: 550,
+      }),
+      timeout: 20000
+    } as any)
     /* console.log('basePrompt', basePrompt);
     console.log('response', response.text()); */
     
