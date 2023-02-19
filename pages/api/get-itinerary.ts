@@ -49,7 +49,11 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
         max_tokens: 550
       })
     })
-    const itinerary = await response.json()
+    /* console.log('basePrompt', basePrompt);
+    console.log('response', response.text()); */
+    
+    const itineraryResponse = await response.text();
+    const itinerary = JSON.parse(itineraryResponse.trim());
     const pointsOfInterestPrompt = 'Extract the points of interest out of this text, with no additional words, separated by commas: ' + itinerary.choices[0].text
 
     res.status(200).json({
