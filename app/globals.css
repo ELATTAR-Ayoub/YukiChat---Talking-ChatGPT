@@ -123,27 +123,32 @@ body {
     }
 }
 
-.linkHover {
+.button-pulse {
   position: relative;
-  border-bottom: 1px solid #FF69B4;
-  padding: 0px 2px 2px 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.linkHover::before {
+.button-pulse::before, .button-pulse::after  {
   content: '';
-  display: inline-block;
   position: absolute;
-  left: 0;
-  top: 0;
-  width: 0%;
-  height: 100%;
-  background-color: #FF69B4;
-  transition: all 0.3s ease-in-out;
   z-index: -1;
+  @apply rounded-full w-full aspect-square bg-accent-color-71;
 }
 
-.linkHover:hover::before {
-  width: 100%;
+.button-pulse::before {
+  @apply animate-pulse opacity-20 duration-200 scale-125;
+}
+
+.button-pulse::after {
+  @apply animate-pulse opacity-50 duration-300 scale-150;
+}
+
+@keyframes pulse {
+  50% {
+      opacity: .2;
+  }
 }
 
 /* inputs */

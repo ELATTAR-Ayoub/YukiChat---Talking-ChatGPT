@@ -36,7 +36,7 @@ const Header = () => {
             variants={fadeIn('right', 'spring', 0, 0.8)}
             className={` w-full lg:w-full`}>
                 <p className='text-base text-secondary-color my-3 text-center'>Developed with &lt;3 by ELATTAR Ayoub.</p>
-                <p className=' opacity-70 text-base text-secondary-color text-center'>Copyright &#169; 2023 GPT-Travel</p>
+                <p className=' opacity-70 text-base text-secondary-color text-center'>Copyright &#169; 2023 YukiChat</p>
             </motion.div>
         </motion.div>
         

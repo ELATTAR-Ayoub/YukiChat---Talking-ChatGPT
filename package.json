@@ -34,6 +34,7 @@
     "react-markdown": "^8.0.5",
     "react-player": "^2.11.0",
     "react-redux": "^8.0.5",
+    "react-speech-kit": "^3.0.1",
     "redux": "^4.2.0",
     "redux-provider": "^1.0.29",
     "redux-thunk": "^2.4.2",
