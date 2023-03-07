@@ -114,14 +114,16 @@ const Hero = () => {
   }
 
   const tts = (input: string) => {
+    console.log();
+    
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
       
       // Find the voice that matches the selected language
       const selectedVoice = voices.find(v => v.value === voice);
 
-      utterance.addEventListener('end', () => {
+      /* utterance.addEventListener('end', () => {
         setSpeaking(false);
-      })
+      }) */
   
       // Set the voice of the utterance
       if (selectedVoice) {
