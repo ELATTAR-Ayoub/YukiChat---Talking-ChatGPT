@@ -52,8 +52,6 @@ const Hero = () => {
   const [lang, setLang] = useState('en-US');
   const [blocked, setBlocked] = useState(false);
 
-  const utterance = new SpeechSynthesisUtterance();
-
   useEffect(() => {
     if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window && 'speechSynthesis' in window) {
       setSupported(true);
@@ -114,16 +112,26 @@ const Hero = () => {
   }
 
   const tts = (input: string) => {
-    console.log();
+    console.log('in');
     
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      console.log('in in');
+      const utterance = new SpeechSynthesisUtterance();
       
       // Find the voice that matches the selected language
       const selectedVoice = voices.find(v => v.value === voice);
 
-      /* utterance.addEventListener('end', () => {
+      utterance.onstart = () => {
+        setSpeaking(true);
+      };
+  
+      utterance.onresume = () => {
+        setSpeaking(true);
+      };
+
+      utterance.onend = () => {
         setSpeaking(false);
-      }) */
+      };
   
       // Set the voice of the utterance
       if (selectedVoice) {
@@ -142,7 +150,9 @@ const Hero = () => {
       
   
       window.speechSynthesis.speak(utterance);
+      console.log('out');
     }
+    console.log('out out');
   }
 
   const hitAPI = (msg:string) => {
