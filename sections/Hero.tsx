@@ -36,7 +36,7 @@ const languageOptions = [
 const Hero = () => {
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState<{show: boolean, msg: string, type: string}>({show:false, msg:'', type:'error' })
-  const [inputValue, setInputValue] = useState('Hey luffy, law said he dropped all our meat in the sea. so no launch tonight');
+  const [inputValue, setInputValue] = useState('Click the button below and say something!');
   const [aiRespond, setAiRespond] = useState('');
 
   // pitch => min="0", max="2", defaultValue="1"
