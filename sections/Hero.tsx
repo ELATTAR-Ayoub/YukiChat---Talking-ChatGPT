@@ -120,6 +120,11 @@ const Hero = () => {
       
       // Find the voice that matches the selected language
       const selectedVoice = voices.find(v => v.value === voice);
+      utterance.volume = 1;
+      utterance.pitch = 1;
+      utterance.rate = 1;
+      utterance.lang = voice;
+      utterance.text = input;
 
       utterance.onstart = () => {
         setSpeaking(true);
@@ -137,12 +142,6 @@ const Hero = () => {
       if (selectedVoice) {
         utterance.voice = window.speechSynthesis.getVoices()[selectedVoice.index];
       }
-
-      utterance.lang = voice;
-      utterance.text = input;
-      utterance.volume = 1;
-      utterance.pitch = 1;
-      utterance.rate = 1;
 
       console.log('utterance', utterance);
       console.log('voice', voice);
@@ -177,6 +176,7 @@ const Hero = () => {
   }
 
   const cancel = () => {
+    setSpeaking(false);
     window.speechSynthesis.cancel();
   }
   
