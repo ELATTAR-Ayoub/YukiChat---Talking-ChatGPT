@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image';
-import { useSpeechSynthesis, useSpeechRecognition  } from 'react-speech-kit';
 
 // components
 import Loader from '@/components/loader';
@@ -15,54 +14,75 @@ import styles from '@/styles/index';
 // constants
 import {suggestions} from '@/constants';
 
+declare global {
+  interface Window {
+    webkitSpeechRecognition: any;
+  }
+}
+
 const languageOptions = [
-  { label: 'Cambodian', value: 'km-KH' },
-  { label: 'Deutsch', value: 'de-DE' },
-  { label: 'English', value: 'en-AU' },
-  { label: 'Farsi', value: 'fa-IR' },
-  { label: 'Français', value: 'fr-FR' },
+  { label: 'English (US)', value: 'en-US' },
+  { label: 'English (UK)', value: 'en-GB' },
+  { label: 'Español (España)', value: 'es-ES' },
+  { label: 'Español (México)', value: 'es-MX' },
+  { label: 'Français (France)', value: 'fr-FR' },
   { label: 'Italiano', value: 'it-IT' },
-  { label: '普通话 (中国大陆) - Mandarin', value: 'zh' },
-  { label: 'Portuguese', value: 'pt-BR' },
-  { label: 'Español', value: 'es-MX' },
-  { label: 'Svenska - Swedish', value: 'sv-SE' },
+  { label: 'Deutsch', value: 'de-DE' },
+  { label: 'Português (Brasil)', value: 'pt-BR' },
+  { label: '中文 (普通话)', value: 'zh-CN' },
+  { label: '日本語', value: 'ja-JP' },
 ];
 
 const Hero = () => {
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState<{show: boolean, msg: string, type: string}>({show:false, msg:'', type:'error' })
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState('Hey luffy, law said he dropped all our meat in the sea. so no launch tonight');
   const [aiRespond, setAiRespond] = useState('');
+
+  // pitch => min="0", max="2", defaultValue="1"
+  const [pitch, setPitch] = useState(1);
+  // rate => min="0", max="2", defaultValue="1"
+  const [rate, setRate] = useState(1);
+  const [voice, setVoice] = useState('en-GB');
+  const [voices, setVoices] = useState<{ label: string; value: string; index: number }[]>([]);
+  // const voice = voices[voiceIndex] || null;
+  const [supported, setSupported] = useState(false);
+  const [speaking, setSpeaking] = useState(false);
+  const [listening, setListening] = useState(false);
+  const [lang, setLang] = useState('en-US');
+  const [blocked, setBlocked] = useState(false);
+
+  const utterance = new SpeechSynthesisUtterance();
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window && 'speechSynthesis' in window) {
+      setSupported(true);
+      // Call getVoices function to populate the voices array
+      getVoices();
+  
+      // Add an event listener to update the voices array when the voices change
+      window.speechSynthesis.addEventListener('voiceschanged', getVoices);
+    }
+  }, []);
+
+  const getVoices = () => {
+    const voicesP = window.speechSynthesis.getVoices();
+  
+    const voices = voicesP.map((voice, index) => {
+      return {
+        label: `${voice.lang} - ${voice.name}`,
+        value: voice.lang,
+        index,
+      };
+    });
+  
+    setVoices(voices);
+  }
 
   // useSpeechSynthesis
   const onEnd = () => {
     hitAPI(inputValue);
   };
-  const { speak, cancel, speaking, voices } = useSpeechSynthesis({});
-  // pitch => min="0", max="2", defaultValue="1"
-  const [pitch, setPitch] = useState(1);
-  // rate => min="0", max="2", defaultValue="1"
-  const [rate, setRate] = useState(1);
-  const [voiceIndex, setVoiceIndex] = useState<string | null>(null);
-  const voice = voices[voiceIndex] || null;
-
-  // useSpeechRecognition
-  const onError = (event:any) => {
-    if (event.error === 'not-allowed') {
-      setBlocked(true);
-    }
-  };
-
-  const onResult = (result:string) => {
-    setInputValue(result);
-  };
-  const { listen, listening, stop, supported } = useSpeechRecognition({
-    onResult,
-    onError,
-    onEnd
-  });
-  const [lang, setLang] = useState('en-AU');
-  const [blocked, setBlocked] = useState(false);
   
   const handleTts = async (event: React.MouseEvent<HTMLButtonElement>  | React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -71,20 +91,56 @@ const Hero = () => {
 
   const handleStt = async (event: React.MouseEvent<HTMLButtonElement>  | React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const toggle = listening ? stop: () => { stt(lang) };
+    setListening(true);
+    if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window) {
+      const recognition = new window.webkitSpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = lang; // set the language to English (US)
+    
+      recognition.onresult = (event:any) => {
+        const transcript = event.results[event.results.length - 1][0].transcript;
+        console.log(transcript);
+        setInputValue(transcript);
+      };
 
-    toggle();
+      recognition.start();
+    }
+  }
+
+  const endStt = async () => {
+    setListening(false);
+    onEnd();
   }
 
   const tts = (input: string) => {
-    speak({ 
-      text: input, voice, rate, pitch
-    });
-  }
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      
+      // Find the voice that matches the selected language
+      const selectedVoice = voices.find(v => v.value === voice);
 
-  const stt = (language: string) => {
-    setBlocked(false);
-    listen({ lang: language });
+      utterance.addEventListener('end', () => {
+        setSpeaking(false);
+      })
+  
+      // Set the voice of the utterance
+      if (selectedVoice) {
+        utterance.voice = window.speechSynthesis.getVoices()[selectedVoice.index];
+      }
+
+      utterance.lang = voice;
+      utterance.text = input;
+      utterance.volume = 1;
+      utterance.pitch = 1;
+      utterance.rate = 1;
+
+      console.log('utterance', utterance);
+      console.log('voice', voice);
+      console.log('input', input);
+      
+  
+      window.speechSynthesis.speak(utterance);
+    }
   }
 
   const hitAPI = (msg:string) => {
@@ -108,6 +164,9 @@ const Hero = () => {
     });
   }
 
+  const cancel = () => {
+    window.speechSynthesis.cancel();
+  }
   
 
   return (
@@ -145,9 +204,9 @@ const Hero = () => {
       <p className=' text-center text-sm sm:text-base'>"{inputValue}"</p>
 
       <div className={`${styles.flexCenter} w-full `}>
-        <button disabled={speaking} title='Click and say something!' onClick={handleStt} className={` ${listening ? 'button-pulse' : '' } ${styles.flexCenter} rounded-full bg-accent-color-71 hover:bg-accent-color-77 transition-all duration-300 w-1/3 sm:w-1/4 md:w-32 aspect-square   `}>
+        <button disabled={speaking} title='Click and say something!' onClick={!listening ? handleStt : endStt} className={` ${listening ? 'button-pulse' : '' } ${styles.flexCenter} rounded-full bg-accent-color-71 hover:bg-accent-color-77 hover:scale-110 transition-all duration-300 w-1/3 sm:w-1/4 md:w-32 aspect-square   `}>
           {!loading && <SolidSvg width={'24px'} height={'24px'} className={' scale-110 sm:scale-150 md:scale-110'} color={'#fff'} path={`${listening ? '/ear.svg' : '/mic.svg'}`} />}
-          {loading && <Loader />}
+          {/* {loading && <Loader />} */}
         </button>
       </div>
       
@@ -162,14 +221,11 @@ const Hero = () => {
             id="voice"
             name="voice"
             className='search_input'
-            value={voiceIndex || ''}
-            onChange={(event) => {
-              setVoiceIndex(event.target.value);
-            }} >
-            <option value="">Default</option>
+            value={voice}
+            onChange={(event) => { setVoice(event.target.value);}} >
             {voices.map((option:any, index:number) => (
-              <option key={option.voiceURI} value={index}>
-                {`${option.lang} - ${option.name}`}
+              <option key={option.label} value={option.value}>
+                {`${option.label}`}
               </option>
             ))}
           </select>
@@ -181,10 +237,9 @@ const Hero = () => {
         </div>
       </div>
 
-      <p className=' text-center text-sm sm:text-base' onClick={() => tts(aiRespond)}>"{aiRespond}"</p>
+      <p className=' cursor-pointer text-center text-sm sm:text-base' onClick={() => tts(aiRespond)}>"{aiRespond}"</p>
       
     </div>
-
     
 
   </section>

@@ -11,7 +11,7 @@ const openai = new OpenAIApi(configuration);
 const getChat = async (inputValue:string) => {
     const response = await openai.createCompletion({
     model: "text-davinci-003",
-    prompt: inputValue,
+    prompt: `##${inputValue}`,
     temperature: 0,
     max_tokens: 550,
     });

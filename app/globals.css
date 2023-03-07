@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Barlow&family=Sono:wght@400&display=swap');
 
 * {
   margin: 0;
@@ -25,6 +26,7 @@ body {
   min-height: 100vh;
   /* font-family: 'Montserrat', sans-serif; */
   font-weight: 500;
+  font-family: 'Sono', sans-serif;
 }
 
 .viewHeight {
