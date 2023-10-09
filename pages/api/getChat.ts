@@ -1,33 +1,43 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
-
-// opanAI
+import { NextApiRequest, NextApiResponse } from "next";
 import { Configuration, OpenAIApi } from "openai";
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-const openai = new OpenAIApi(configuration);
 
-
-const getChat = async (inputValue:string) => {
-    const response = await openai.createCompletion({
-    model: "text-davinci-003",
-    prompt: `##${inputValue}`,
-    temperature: 0,
-    max_tokens: 550,
+const getChat = async (inputValue: string, key: string) => {
+  try {
+    const configuration = new Configuration({
+      apiKey: key,
     });
-    if (response.data.choices[0].text) {return(response.data.choices[0].text);}
-}
+    const openai = new OpenAIApi(configuration);
+    let response = await openai.createCompletion({
+      model: "text-davinci-003",
+      prompt: `## ${inputValue}`,
+      temperature: 0,
+      max_tokens: 50,
+    });
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    try {
-        console.log('you sent - chatGPT =>' + req.body.string);
-
-        const data = await getChat(req.body.string);
-        const responseData = { object: data };
-        res.status(200).json(responseData);
-    } catch (error) {
-        const errorAsError = error as Error;
-        const responseData = { message: errorAsError.message};
-        res.status(404).json(responseData);
+    if (response.data.choices[0]) {
+      // Successful response (OpenAI may return 201 for created resources)
+      return response.data.choices[0].text;
     }
+  } catch (error) {
+    throw new Error("Error from OpenAI: " + error);
+  }
+};
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  try {
+    console.log("Received input - chatGPT: " + req.body.string);
+    console.log("Received input - key: " + req.body.key);
+
+    const data = await getChat(req.body.string, req.body.key);
+    const responseData = { object: data };
+    res.status(200).json(responseData);
+  } catch (error) {
+    console.error("Error:", error); // Log the complete error object
+    const errorAsError = error as Error;
+    const responseData = { message: errorAsError.message };
+    res.status(500).json(responseData);
+  }
 }
